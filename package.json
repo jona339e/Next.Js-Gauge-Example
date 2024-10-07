@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.35.0",
     "highcharts-react-official": "^3.2.1",
     "next": "14.2.14",
     "react": "^18",

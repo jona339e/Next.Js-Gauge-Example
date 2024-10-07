@@ -1,17 +1,44 @@
 'use client'
+
 import React from 'react'
-import * as Highcharts from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import highchartsMore from "highcharts/highcharts-more.js"
 import solidGauge from "highcharts/modules/solid-gauge.js";
 import { useEffect, useState } from 'react';
 import styles from './MyHighchart.module.css'
+import { fetchMeasurements } from '../../services/InfluxDBGet/InfluxDBGet';
 
-highchartsMore(Highcharts);
-solidGauge(Highcharts);
+
+
+if (typeof Highcharts === 'object') {
+    highchartsMore(Highcharts);
+    solidGauge(Highcharts);
+}
+
 
 
 const MyHighchart = () => {
+    const guid = "6424A2EE-2C46-4486-B8D9-7931CC6269C2"
+    const [data, setData] = useState<any>(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            
+        try {
+            const data = await fetchMeasurements(guid);
+            if (data !== null) {
+                setData(data);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        };
+
+        fetchData();
+    }, []);
+
+    console.log(data[0]._value);
 
     const [backgroundColor, setBackgroundColor] = useState('');
     const [foregroundColor, setForegroundColor] = useState('');
@@ -92,7 +119,7 @@ const MyHighchart = () => {
 
         series: [{
             name: 'kWh',
-            data: [5],
+            data: [data],
             dataLabels: {
                 format:
                 '<div style="text-align:center">' +
